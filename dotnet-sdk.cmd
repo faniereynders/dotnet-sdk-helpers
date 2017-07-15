@@ -4,6 +4,15 @@ if [%1]==[help] goto help
 if [%1]==[] goto help
 if [%1]==[list] goto sdk_list
 if [%1]==[latest] goto sdk_latest
+
+for /f %%f in ('dir /b "%programfiles%\dotnet\sdk"') do (
+    if %1==%%f goto swicth
+) 
+echo The %1 version of .Net Core SDK was not found 
+echo Please, run "dotnet sdk list" to make sure you have it installed in "%programfiles%\dotnet\sdk" 
+goto end
+
+:swicth
 echo Switching .NET Core SDK version to %1
 (
 echo {
@@ -21,6 +30,18 @@ goto end
 
 :sdk_latest
 if exist global.json del global.json
+if exist ..\global.json (
+    set /p choice= There's a global.json in your parent directory. Do you want to delete it? (N/y) 
+    if /I "%choice%"=="y" (
+        del ..\global.json
+    ) else (
+        SETLOCAL ENABLEDELAYEDEXPANSION
+        set dotnetVersion=
+        for /f "delims=" %%a in ('dotnet --version') do set dotnetVersion=%%a
+        echo .NET Core SDK current version: !dotnetVersion!
+        goto end
+    )
+) 
 echo .NET Core SDK version switched to latest version.
 dotnet --version
 
