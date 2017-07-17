@@ -6,13 +6,13 @@ if [%1]==[list] goto sdk_list
 if [%1]==[latest] goto sdk_latest
 
 for /f %%f in ('dir /b "%programfiles%\dotnet\sdk"') do (
-    if %1==%%f goto swicth
+    if %1==%%f goto switch
 ) 
 echo The %1 version of .Net Core SDK was not found 
 echo Please, run "dotnet sdk list" to make sure you have it installed in "%programfiles%\dotnet\sdk" 
 goto end
 
-:swicth
+:switch
 echo Switching .NET Core SDK version to %1
 (
 echo {
