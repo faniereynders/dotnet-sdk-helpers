@@ -12,7 +12,7 @@ echo Usage: .net [command]
 echo Usage: .net [dotnet args]
 echo.
 echo Helper commands:
-echo   sdk      Swtiches to a specific .NET Core SDK version
+echo   sdk      Switches to a specific .NET Core SDK version
 echo   help     Display help
 echo.
 echo dotnet args:
