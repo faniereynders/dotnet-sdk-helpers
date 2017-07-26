@@ -16,7 +16,7 @@ goto end
 
 :sdk_list
 echo The installed .NET Core SDKs are:
-dir /b "%programfiles%\dotnet\sdk"
+dir /b "%programfiles%\dotnet\sdk" | find /i "."
 goto end
 
 :sdk_latest
