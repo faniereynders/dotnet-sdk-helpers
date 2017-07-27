@@ -4,6 +4,8 @@ if [%1]==[help] goto help
 if [%1]==[] goto help
 if [%1]==[list] goto sdk_list
 if [%1]==[latest] goto sdk_latest
+if [%1]==[releases] goto sdk_releases
+if [%1]==[install] goto sdk_install
 
 for /f %%f in ('dir /b "%programfiles%\dotnet\sdk"') do (
     if %1==%%f goto switch
@@ -61,5 +63,22 @@ echo.
 echo versions:
 echo   An installed version number of a .NET Core SDK
 echo.
+
+goto end
+
+:sdk_releases
+echo Releases available for the .NET Core SDK are:
+curl "https://api.github.com/repos/dotnet/cli/releases" -H "Accept: application/json" -s | jq ".[] | .tag_name" -r
+echo.
+
+goto end
+
+:sdk_install
+
+SET version = %2
+SET platform = win-x64
+if [%3]==[] SET platform = %3
+
+curl "https://raw.githubusercontent.com/faniereynders/dotnet-sdk-helpers/_sources/test.json" -H "Accept: application/json" -s | jq ".[%version%]" -r
 
 :end
