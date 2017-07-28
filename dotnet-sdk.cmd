@@ -68,17 +68,37 @@ goto end
 
 :sdk_releases
 echo Releases available for the .NET Core SDK are:
-curl "https://api.github.com/repos/dotnet/cli/releases" -H "Accept: application/json" -s | jq ".[] | .tag_name" -r
+curl "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json" -H "Accept: application/json" -s | jq "map({date: .date,sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[] | \"\(.date)\t\(.sdk)\" " -r
 echo.
 
 goto end
 
 :sdk_install
+SETLOCAL
+SET version=%2
+if [%version%]==[] SET version=latest
+if "%version%"=="latest" (
+    curl "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json" -H "Accept: application/json" -s | jq "map({date: .date,sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[-1] | .sdk " -r > version.dat
+    set /p version=<version.dat
+)
 
-SET version = %2
-SET platform = win-x64
-if [%3]==[] SET platform = %3
+SET platform=win-x64
+if NOT [%3]==[] SET platform=%3
+SET platform_id=sdk-%platform%
 
-curl "https://raw.githubusercontent.com/faniereynders/dotnet-sdk-helpers/_sources/test.json" -H "Accept: application/json" -s | jq ".[%version%]" -r
+curl "https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json" -H "Accept: application/json" -s | jq "map({sdk: .\"version-sdk\",url: (.\"blob-sdk\" + (.\"%platform_id%\" | rtrimstr(\".zip\")) + \".exe\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"%version%\") | .url " -r > download.dat
+
+SET /p version=<version.dat
+SET /p url=<download.dat
+
+echo Downloading .NET Core SDK version %version% for platform %platform%...
+
+echo %url%
+
+download %url% .\installs\%version%.exe
+
+echo Done.
+ENDLOCAL
+goto end
 
 :end
