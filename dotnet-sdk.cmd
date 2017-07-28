@@ -5,7 +5,7 @@ if [%1]==[] goto help
 if [%1]==[list] goto sdk_list
 if [%1]==[latest] goto sdk_latest
 if [%1]==[releases] goto sdk_releases
-if [%1]==[install] goto sdk_install
+if [%1]==[get] goto sdk_download
 
 for /f %%f in ('dir /b "%programfiles%\dotnet\sdk"') do (
     if %1==%%f goto switch
@@ -73,7 +73,7 @@ echo.
 
 goto end
 
-:sdk_install
+:sdk_download
 SETLOCAL
 SET version=%2
 if [%version%]==[] SET version=latest
