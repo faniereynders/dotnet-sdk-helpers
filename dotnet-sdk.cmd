@@ -54,7 +54,7 @@ echo Usage: .net sdk [command]
 echo Usage: .net sdk [version]
 echo.
 echo Commands:
-echo   latest      Swtiches to the latest .NET Core SDK version
+echo   latest      Switches to the latest .NET Core SDK version
 echo   list        Lists all installed .NET Core SDKs
 echo   help        Display help
 echo.
