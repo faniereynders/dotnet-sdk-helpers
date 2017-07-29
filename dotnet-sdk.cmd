@@ -54,8 +54,10 @@ echo while the latest installed version is the %latest_installed_version% sdk
 echo.
 
 set /p choice= Do you want to switch to the latest installed sdk (%latest_installed_version%)? (Y/n)
-REM Do nothing
+REM If no, then do nothing
 if /I "%choice%"=="n" goto end
+
+REM As there is a global.json with another version, we need to create one with the latest version
 echo Switching .NET Core SDK version to %latest_installed_version% (as a local globa.json)
 (
 echo {
