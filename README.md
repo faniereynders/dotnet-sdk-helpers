@@ -5,7 +5,7 @@
 ```
 dotnet sdk [command]
 dotnet sdk [version]
-dotnet sdk get [version]
+dotnet sdk get [version] [platform]
 ```
 
 | Command | Description |
