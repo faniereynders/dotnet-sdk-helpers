@@ -56,7 +56,7 @@ echo .NET Core SDK Switcher
 echo.
 echo Usage: .net sdk [command]
 echo Usage: .net sdk [version]
-echo Usage: .net sdk get [version]
+echo Usage: .net sdk get [version] [platform]
 echo.
 echo Commands:
 echo   latest      Swtiches to the latest .NET Core SDK version
