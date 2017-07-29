@@ -1,0 +1,53 @@
+#!/bin/bash
+
+function sdk_help(){
+echo ".NET Command Line SDK Switcher (1.0.0)
+
+Usage: dotnet sdk [command]
+Usage: dotnet sdk [version]
+
+Commands:
+  latest      Swtiches to the latest .NET Core SDK version
+  list        Lists all installed .NET Core SDKs
+  help        Display help
+
+Versions:
+  An installed version number of a .NET Core SDK"
+}
+
+function sdk_list(){
+	echo "The installed .NET Core SDKs are:"
+	ls -1 "/usr/local/share/dotnet/sdk"
+}
+
+function sdk_latest(){
+	if [ -e global.json ]; then
+		rm global.json
+	fi
+	
+	echo ".NET Core SDK version switched to latest version."
+	dotnet --version
+}
+
+case "$1" in 
+	"help")
+		sdk_help
+		;;
+	"")
+		sdk_help
+		;;
+	"list")
+		sdk_list
+		;;
+	"latest")
+		sdk_latest
+		;;
+	*)
+		echo "Switching .NET Core SDK version to $1"
+		echo "{
+  \"sdk\": {
+    \"version\": \"$1\"
+  }
+}" >> global.json
+		;;
+esac
