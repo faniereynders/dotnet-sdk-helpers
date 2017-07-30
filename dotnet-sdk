@@ -58,7 +58,7 @@ function sdk_latest(){
 		esac 
 	done
 
-		echo "Switching .NET Core SDK version to $latest_installed_version"
+		echo "Switching .NET Core SDK version to $latest_installed_version (as a local global.json)"
 		echo "{
   \"sdk\": {
     \"version\": \"$latest_installed_version\"
