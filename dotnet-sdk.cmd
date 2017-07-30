@@ -41,7 +41,11 @@ call :searchParentDirectories
 cd %currentDir%
 
 REM No global.json found in any parent directory, we don't need to do anything more
-if "%version_from_global%"=="" goto end
+if "%version_from_global%"=="" (
+    echo .NET Core SDK version switched to latest version
+    dotnet --version
+    goto end
+)
 
 REM In order to get the latest sdk installed, dotnet.exe --version needs to be executed in a context
 REM where no global.json will be found. I might be assuming too much but I think it's safe to believe
@@ -51,7 +55,11 @@ for /f %%f in ('start /d "%programfiles%\dotnet\" /b dotnet.exe --version') do (
 )
 
 REM The global.json already points to the latest version installed. 
-if "%version_from_global%"=="%latest_installed_version%" goto end
+if "%version_from_global%"=="%latest_installed_version%" (
+    echo .NET Core SDK version switched to latest version
+    dotnet --version    
+    goto end
+)
 
 echo You have a global.json in one of your parent directories pointing to the %version_from_global% sdk version
 echo while the latest installed version is the %latest_installed_version% sdk
@@ -59,7 +67,11 @@ echo.
 
 set /p choice= Do you want to switch to the latest installed sdk (%latest_installed_version%)? (Y/n)
 REM If no, then do nothing
-if /I "%choice%"=="n" goto end
+if /I "%choice%"=="n" (
+    echo Switching .NET Core SDK version to %version_from_global%
+    dotnet --version
+    goto end
+)
 
 REM As there is a global.json with another version, we need to create one with the latest version
 echo Switching .NET Core SDK version to %latest_installed_version% (as a local globa.json)
@@ -77,6 +89,8 @@ goto end
 REM Function that goes up in the directory tree looking for a global.json
 REM Stops on the first one found or when the root is reached
 :searchParentDirectories
+REM We got to the root, stop recursion
+if "%cd:~3,1%"=="" exit /b
 cd ..
 if exist global.json ( 
     for /f %%f in ('dotnet.exe --version') do (
@@ -84,8 +98,7 @@ if exist global.json (
     )
     exit /b
 )
-REM We got to the root, stop recursion
-if "%cd:~3,1%"=="" exit /b
+
 call :searchParentDirectories
 exit /b
 
