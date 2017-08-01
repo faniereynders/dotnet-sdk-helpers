@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function sdk_help(){
 echo ".NET Command Line SDK Switcher (1.0.0)
 
@@ -17,7 +18,7 @@ Versions:
 
 function sdk_list(){
 	echo "The installed .NET Core SDKs are:"
-	ls -1 "/usr/local/share/dotnet/sdk"
+	ls -1 "$(sdk_locate)"
 }
 
 function sdk_latest(){
@@ -27,6 +28,28 @@ function sdk_latest(){
 	
 	echo ".NET Core SDK version switched to latest version."
 	dotnet --version
+}
+
+function sdk_locate(){
+	# MacOS X is missing the full GNU readlink - we need to iterate by hand.
+	OLDDIR="$(pwd)"
+	TARGET="$(which dotnet)"
+
+	cd $(dirname $TARGET)
+	TARGET=$(basename $TARGET)
+
+	while [ -L "$TARGET" ]
+	do
+		TARGET=$(readlink $TARGET)
+		cd $(dirname $TARGET)
+		TARGET=$(basename $TARGET)
+	done
+
+	RESULT="$(pwd -P)/sdk"
+
+	cd "$OLDDIR"
+
+	echo "$RESULT"
 }
 
 case "$1" in 
