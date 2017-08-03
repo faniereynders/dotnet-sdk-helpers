@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function help(){
+echo ".NET Core CLI SDK Helper
+
+Usage: .net [command]
+Usage: .net [dotnet args]
+
+Helper commands:
+  sdk      Swtiches to a specific .NET Core SDK version
+  help     Display help
+
+dotnet args:
+  The standard dotnet commands for installed sdk"
+}
+
+case "$1" in 
+	"help")
+		help
+		;;
+	"")
+		help
+		;;
+	*)
+		dotnet $*
+		;;
+esac
