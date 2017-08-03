@@ -101,7 +101,7 @@ echo Downloading .NET Core SDK version %version% for platform %platform%...
 
 echo %url%
 
-SET exe=.\installs\%version%.exe
+SET exe=%~dp0installs\%version%.exe
 
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%url%', '%exe%')"
 echo Download completed. If succeeded the installation will start shortly.
