@@ -85,17 +85,17 @@ SETLOCAL
 SET version=%2
 if [%version%]==[] SET version=latest
 if "%version%"=="latest" (
-    "%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[-1] | .sdk " -r > version.dat
-    set /p version=<version.dat
+    "%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[-1] | .sdk " -r > %~dp0version.dat
+    set /p version=<%~dp0version.dat
 )
 
 SET platform=win-x64
 if NOT [%3]==[] SET platform=%3
 SET platform_id=sdk-%platform%
 
-"%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"version-sdk\",url: (.\"blob-sdk\" + (.\"%platform_id%\" | rtrimstr(\".zip\")) + \".exe\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"%version%\") | .url " -r > download.dat
+"%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"version-sdk\",url: (.\"blob-sdk\" + (.\"%platform_id%\" | rtrimstr(\".zip\")) + \".exe\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"%version%\") | .url " -r > %~dp0download.dat
 
-SET /p url=<download.dat
+SET /p url=<%~dp0download.dat
 
 echo Downloading .NET Core SDK version %version% for platform %platform%...
 
