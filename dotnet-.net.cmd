@@ -1,3 +1,0 @@
-@echo off
-echo Installing .NET Core SDK Helper...
-setx path "%PATH%;%CD%" 
