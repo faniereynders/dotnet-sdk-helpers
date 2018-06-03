@@ -47,11 +47,18 @@ case "$1" in
 		sdk_latest
 		;;
 	*)
-		echo "Switching .NET Core SDK version to $1"
-		echo "{
-  \"sdk\": {
-    \"version\": \"$1\"
-  }
-}" >> global.json
+		if [-e "/usr/local/share/dotnet/sdk/"$1]; then
+			echo "Exists"
+		else
+			echo "Does not exist. Pick from the list below:"
+			sdk_versions
+		fi
+
+#		echo "Switching .NET Core SDK version to $1"
+#		echo "{
+#  \"sdk\": {
+#    \"version\": \"$1\"
+#  }
+#}" >> global.json
 		;;
 esac
