@@ -15,9 +15,13 @@ Versions:
   An installed version number of a .NET Core SDK"
 }
 
+function sdk_versions(){
+	ls -1 "/usr/local/share/dotnet/sdk"
+}
+
 function sdk_list(){
 	echo "The installed .NET Core SDKs are:"
-	ls -1 "/usr/local/share/dotnet/sdk"
+	sdk_versions
 }
 
 function sdk_latest(){
