@@ -7,7 +7,7 @@ Usage: .net [command]
 Usage: .net [dotnet args]
 
 Helper commands:
-  sdk      Swtiches to a specific .NET Core SDK version
+  sdk      Switches to a specific .NET Core SDK version
   help     Display help
 
 dotnet args:

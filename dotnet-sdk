@@ -7,7 +7,7 @@ Usage: dotnet sdk [command]
 Usage: dotnet sdk [version]
 
 Commands:
-  latest      Swtiches to the latest .NET Core SDK version
+  latest      Switches to the latest .NET Core SDK version
   list        Lists all installed .NET Core SDKs
   help        Display help
 
