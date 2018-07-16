@@ -68,7 +68,7 @@ echo   get         Downloads the provided release version. ('' or 'latest' for t
 echo   help        Display help
 echo.
 echo version:
-echo   An installed version number of a .NET Core SDK
+echo   The version number of a .NET Core SDK
 echo.
 
 goto end

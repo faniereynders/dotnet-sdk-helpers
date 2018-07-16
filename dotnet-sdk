@@ -12,7 +12,7 @@ Commands:
   help        Display help
 
 Versions:
-  An installed version number of a .NET Core SDK"
+  The version number of a .NET Core SDK"
 }
 
 function sdk_list(){
