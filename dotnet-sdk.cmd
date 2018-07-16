@@ -64,7 +64,7 @@ echo Commands:
 echo   latest      Switches to the latest .NET Core SDK version
 echo   list        Lists all installed .NET Core SDKs
 echo   releases    Lists all available releases of .NET Core SDKs
-echo   get         Downloads the provided release version. ('' or 'latest' for the latest release)
+echo   get         Downloads the specified release version. ('' or 'latest' for the latest release)
 echo   help        Display help
 echo.
 echo version:
