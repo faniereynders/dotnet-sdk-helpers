@@ -8,7 +8,7 @@ Usage: .net [dotnet args]
 
 Helper commands:
   sdk      Swtiches to a specific .NET Core SDK version
-  help     Display help
+  help     Displays help
 
 dotnet args:
   The standard dotnet commands for installed sdk"

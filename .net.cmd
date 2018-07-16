@@ -13,7 +13,7 @@ echo Usage: .net [dotnet args]
 echo.
 echo Helper commands:
 echo   sdk      Switches to a specific .NET Core SDK version
-echo   help     Display help
+echo   help     Displays help
 echo.
 echo dotnet args:
 echo   The standard dotnet commands for installed sdk

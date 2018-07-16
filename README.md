@@ -15,7 +15,7 @@ dotnet sdk get [version] [platform]
 | `dotnet sdk list` | Lists all installed .NET Core SDKs |
 | `dotnet sdk releases` | Lists all available releases of .NET Core SDKs |
 | `dotnet sdk get [version] [platform]` | Downloads the provided release version & platform. ('' or 'latest' for the latest release. Default platform is `win-x64`) |
-| `dotnet sdk help` | Display help |
+| `dotnet sdk help` | Displays help |
 
 ## Installing the helpers
 
