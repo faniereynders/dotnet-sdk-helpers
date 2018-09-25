@@ -21,8 +21,9 @@ dotnet sdk get [version] [platform]
 
 ## Windows
 
-1. Clone or download the repo on a desired location
-2. From within Administrator CMD prompt, run **`dotnet .net`**
+1. Clone or download the repo to a desired location
+2. From an Administrator CMD prompt change directory to the repo location
+2. Run **`dotnet-.net.cmd`**
 
 ## Mac
 
