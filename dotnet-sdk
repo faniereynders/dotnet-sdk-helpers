@@ -17,7 +17,7 @@ Versions:
 
 function sdk_list(){
 	echo "The installed .NET Core SDKs are:"
-	ls -1 "/usr/local/share/dotnet/sdk"
+	ls -1 /usr/share/dotnet/sdk | sort | head -n -1
 }
 
 function sdk_latest(){
