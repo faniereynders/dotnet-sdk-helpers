@@ -24,9 +24,65 @@ function sdk_latest(){
 	if [ -e global.json ]; then
 		rm global.json
 	fi
-	
+
+	currentDir=$PWD
+	version_from_global="$(searchParentDirectories)"
+	cd $currentDir
+
+	if [ "$version_from_global" == "" ]; then 
+		echo ".NET Core SDK version switched to latest version"
+		dotnet --version
+		return 0
+	fi
+
+	cd /usr/local/share/dotnet/sdk
+	latest_installed_version="$(dotnet --version)"
+	cd -
+
+	# The global.json already points to the latest version installed. 
+	if [ "$latest_installed_version" == "$version_from_global" ]; then
+		echo ".NET Core SDK version switched to latest version"
+		dotnet --version
+		return 0
+	fi
+
+	echo "You have a global.json in one of your parent directories pointing to the $version_from_global sdk version"
+	echo "while the latest installed version is the $latest_installed_version sdk"
+
+	while true; do
+		read -p "Do you want to switch to the latest installed sdk ($latest_installed_version)? (Y/n)" yn
+		case $yn in
+			[Yy]* ) break;;
+			[Nn]* ) echo "Switching .NET Core SDK version to $version_from_global"; return 0;;
+			* ) echo "Please, answer yes or no";;
+		esac 
+	done
+
+		echo "Switching .NET Core SDK version to $latest_installed_version (as a local global.json)"
+		echo "{
+  \"sdk\": {
+    \"version\": \"$latest_installed_version\"
+  }
+}" >> global.json
 	echo ".NET Core SDK version switched to latest version."
 	dotnet --version
+}
+
+
+# Function that goes up in the directory tree looking for a global.json
+# Stops on the first one found or when the root is reached
+function searchParentDirectories(){
+	if [ "$PWD" == "/" ]; then 
+		return 0
+	fi
+	cd ..
+
+	if [ -e global.json ]; then
+		echo `dotnet --version`
+		return 0
+	fi
+
+	searchParentDirectories
 }
 
 case "$1" in 
