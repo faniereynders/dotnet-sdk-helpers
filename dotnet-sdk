@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dotnet_releases_url=https://raw.githubusercontent.com/dotnet/core/master/release-notes/releases.json
+
 function sdk_help(){
 echo ".NET Command Line SDK Switcher (1.0.0)
 
@@ -9,6 +11,8 @@ Usage: dotnet sdk [version]
 Commands:
   latest      Swtiches to the latest .NET Core SDK version
   list        Lists all installed .NET Core SDKs
+  releases    List all available releases of .NET Core SDKs
+  get         Downloads the provided release version. ('' or 'latest' for the latest release)
   help        Display help
 
 Versions:
@@ -20,6 +24,21 @@ function sdk_list(){
 	ls -1 /usr/share/dotnet/sdk | sort | head -n -1
 }
 
+function sdk_switch(){
+	if [ ! -d "/usr/local/share/dotnet/sdk/$v" ]; then
+		echo "The $v version of .Net Core SDK was not found
+Please, run \"dotnet sdk list\" to make sure you have it installed in /usr/local/share/dotnet/sdk"
+		exit 1
+	fi
+
+	echo "Switching .NET Core SDK version to $v"
+		echo "{
+  \"sdk\": {
+    \"version\": \"$v\"
+  }
+}" >> global.json
+}
+
 function sdk_latest(){
 	if [ -e global.json ]; then
 		rm global.json
@@ -27,6 +46,64 @@ function sdk_latest(){
 	
 	echo ".NET Core SDK version switched to latest version."
 	dotnet --version
+}
+
+function sdk_releases(){
+	check_pre
+
+	echo "Releases available for the .NET Core SDK are:"
+	
+	VS=$(curl -sS $dotnet_releases_url -H "Accept: application/json" | jq "map({date: .date,sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[] | \"\(.date)\t\(.sdk)\" " -r)
+	echo "$VS"
+}
+
+function sdk_install(){
+	check_pre
+
+	if [ -z "$ver" ] || [ "$ver" == "latest" ]; then
+		version=$(curl -sS $dotnet_releases_url -H "Accept: application/json" | jq "map({sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[-1] | .sdk " -r)
+  else
+		version="$ver"
+	fi
+	
+	url=$(curl -sS $dotnet_releases_url -H "Accept: application/json" | jq "map({sdk: .\"version-sdk\",url: (.\"blob-sdk\" + (.\"sdk-mac-x64\" | rtrimstr(\".tar.gz\")) + \".pkg\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"$version\") | .url " -r)
+	filename=$(curl -sS $dotnet_releases_url -H "Accept: application/json" | jq "map({sdk: .\"version-sdk\",filename: (.\"sdk-mac-x64\" | rtrimstr(\".tar.gz\") + \".pkg\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"$version\") | .filename " -r)
+
+	cd ~/Downloads
+
+	echo "Dowloading .NET Core SDK version $version for MacOS"
+	curl -# -L -O $url
+
+	sudo installer -pkg ~/Downloads/$filename -target /
+}
+
+function check_pre(){
+	if ! [ -f "`which jq`" ]; then
+		echo "Install ./jq and dependencies?"
+		read -p "Continue (y/n)?" choice
+		case "$choice" in 
+			y|Y ) 
+				install_jq
+				;;
+			n|N )
+				exit 1
+				;;
+			* ) 
+				echo "invalid"
+				exit 1
+				;;
+		esac
+	fi
+}
+
+function install_jq(){
+	if [ ! -f "`which brew`" ]; then
+		ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
+	else
+		brew update
+	fi
+
+	brew install jq
 }
 
 case "$1" in 
@@ -42,12 +119,15 @@ case "$1" in
 	"latest")
 		sdk_latest
 		;;
+	"releases")
+		sdk_releases
+		;;
+	"get")
+		ver=$2
+		sdk_install
+		;;
 	*)
-		echo "Switching .NET Core SDK version to $1"
-		echo "{
-  \"sdk\": {
-    \"version\": \"$1\"
-  }
-}" >> global.json
+		v=$1
+		sdk_switch
 		;;
 esac
