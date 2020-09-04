@@ -75,7 +75,7 @@ goto end
 
 :sdk_releases
 echo Releases available for the .NET Core SDK are:
-"%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({date: .date,sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[] | \"\(.date)\t\(.sdk)\" " -r
+"%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({date: .date,sdk: .\"Version_SDK\"}) | unique_by(.sdk) | .[] | \"\(.date)\t\(.sdk)\" " -r
 echo.
 
 goto end
@@ -85,15 +85,15 @@ SETLOCAL
 SET version=%2
 if [%version%]==[] SET version=latest
 if "%version%"=="latest" (
-    "%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"version-sdk\"}) | unique_by(.sdk) | .[-1] | .sdk " -r > version.dat
+    "%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"Version_SDK\"}) | unique_by(.sdk) | .[-1] | .sdk " -r > version.dat
     set /p version=<version.dat
 )
 
-SET platform=win-x64
+SET platform=Win_x64
 if NOT [%3]==[] SET platform=%3
-SET platform_id=sdk-%platform%
+SET platform_id=SDK_%platform%
 
-"%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"version-sdk\",url: (.\"blob-sdk\" + (.\"%platform_id%\" | rtrimstr(\".zip\")) + \".exe\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"%version%\") | .url " -r > download.dat
+"%tools_path%\curl" %dotnet_releases_url% -H "Accept: application/json" -s | "%tools_path%\jq" "map({sdk: .\"Version_SDK\",url: (.\"Blob_SDK\" + (.\"%platform_id%\" | rtrimstr(\".zip\")) + \".exe\"  )}) | unique_by(.sdk)  | .[] | select(.sdk==\"%version%\") | .url " -r > download.dat
 
 SET /p url=<download.dat
 
